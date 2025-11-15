@@ -1,0 +1,81 @@
+// 0-1背包问题 - Python核心代码（精简版）
+export const knapsackPythonCode = [
+  '# 初始化 DP 表格',
+  'dp = [[0] * (capacity + 1) for _ in range(n + 1)]',
+  '',
+  'for i in range(1, n + 1):',
+  '    for w in range(capacity + 1):',
+  '        if w < weights[i - 1]:',
+  '            # 容量不足，不能放入',
+  '            dp[i][w] = dp[i - 1][w]',
+  '        else:',
+  '            # 选择放或不放，取最大值',
+  '            not_take = dp[i - 1][w]',
+  '            take = dp[i - 1][w - weights[i - 1]] + values[i - 1]',
+  '            dp[i][w] = max(not_take, take)',
+  '',
+  'return dp[n][capacity]',
+];
+
+// 0-1背包问题 - Java核心代码（精简版）
+export const knapsackJavaCode = [
+  '// 初始化 DP 表格',
+  'int[][] dp = new int[n + 1][capacity + 1];',
+  '',
+  'for (int i = 1; i <= n; i++) {',
+  '    for (int w = 0; w <= capacity; w++) {',
+  '        if (w < weights[i - 1]) {',
+  '            // 容量不足，不能放入',
+  '            dp[i][w] = dp[i - 1][w];',
+  '        } else {',
+  '            // 选择放或不放，取最大值',
+  '            int notTake = dp[i - 1][w];',
+  '            int take = dp[i - 1][w - weights[i - 1]] + values[i - 1];',
+  '            dp[i][w] = Math.max(notTake, take);',
+  '        }',
+  '    }',
+  '}',
+  '',
+  'return dp[n][capacity];',
+];
+
+// LCS - Python核心代码（精简版）
+export const lcsPythonCode = [
+  '# 初始化 DP 表格',
+  'dp = [[0] * (n + 1) for _ in range(m + 1)]',
+  '',
+  'for i in range(1, m + 1):',
+  '    for j in range(1, n + 1):',
+  '        if str1[i - 1] == str2[j - 1]:',
+  '            # 字符相同，长度+1',
+  '            dp[i][j] = dp[i - 1][j - 1] + 1',
+  '        else:',
+  '            # 字符不同，取上方或左方的最大值',
+  '            from_top = dp[i - 1][j]',
+  '            from_left = dp[i][j - 1]',
+  '            dp[i][j] = max(from_top, from_left)',
+  '',
+  'return dp[m][n]',
+];
+
+// LCS - Java核心代码（精简版）
+export const lcsJavaCode = [
+  '// 初始化 DP 表格',
+  'int[][] dp = new int[m + 1][n + 1];',
+  '',
+  'for (int i = 1; i <= m; i++) {',
+  '    for (int j = 1; j <= n; j++) {',
+  '        if (str1.charAt(i - 1) == str2.charAt(j - 1)) {',
+  '            // 字符相同，长度+1',
+  '            dp[i][j] = dp[i - 1][j - 1] + 1;',
+  '        } else {',
+  '            // 字符不同，取上方或左方的最大值',
+  '            int fromTop = dp[i - 1][j];',
+  '            int fromLeft = dp[i][j - 1];',
+  '            dp[i][j] = Math.max(fromTop, fromLeft);',
+  '        }',
+  '    }',
+  '}',
+  '',
+  'return dp[m][n];',
+];

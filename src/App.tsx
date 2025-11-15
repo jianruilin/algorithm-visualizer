@@ -13,7 +13,7 @@ import {
 import { BookOpen } from 'lucide-react';
 
 function App() {
-  const { snapshots, getCurrentSnapshot, input } = useAlgorithmStore();
+  const { snapshots, getCurrentSnapshot, algorithmType } = useAlgorithmStore();
   const currentSnapshot = getCurrentSnapshot();
 
   return (
@@ -45,8 +45,8 @@ function App() {
           {currentSnapshot ? (
             <div className="paper p-6">
               <CodeViewer
-                pythonCode={input.weights ? knapsackPythonCode : lcsPythonCode}
-                javaCode={input.weights ? knapsackJavaCode : lcsJavaCode}
+                pythonCode={algorithmType === 'knapsack' ? knapsackPythonCode : lcsPythonCode}
+                javaCode={algorithmType === 'knapsack' ? knapsackJavaCode : lcsJavaCode}
                 currentLine={currentSnapshot.currentLine}
               />
             </div>

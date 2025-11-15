@@ -7,6 +7,7 @@ interface AlgorithmStore extends AlgorithmState {
 
   // 操作方法
   setAlgorithm: (algorithm: AlgorithmMetadata) => void;
+  setAlgorithmType: (algorithmType: 'knapsack' | 'lcs') => void;
   setInput: (input: AlgorithmInput) => void;
   setSnapshots: (snapshots: AlgorithmSnapshot[]) => void;
 
@@ -30,6 +31,7 @@ interface AlgorithmStore extends AlgorithmState {
 export const useAlgorithmStore = create<AlgorithmStore>((set, get) => ({
   // 初始状态
   algorithm: null,
+  algorithmType: null,
   input: {},
   snapshots: [],
   currentSnapshotIndex: 0,
@@ -39,6 +41,7 @@ export const useAlgorithmStore = create<AlgorithmStore>((set, get) => ({
 
   // 设置方法
   setAlgorithm: (algorithm) => set({ algorithm, status: 'idle' }),
+  setAlgorithmType: (algorithmType) => set({ algorithmType }),
   setInput: (input) => set({ input }),
   setSnapshots: (snapshots) => set({
     snapshots,

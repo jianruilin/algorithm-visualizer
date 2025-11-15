@@ -84,6 +84,8 @@ export interface AlgorithmInput {
 export interface AlgorithmState {
   /** 当前算法 */
   algorithm: AlgorithmMetadata | null;
+  /** 当前算法类型（显式存储，避免通过输入推断） */
+  algorithmType: 'knapsack' | 'lcs' | null;
   /** 输入参数 */
   input: AlgorithmInput;
   /** 所有快照 */

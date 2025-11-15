@@ -8,8 +8,8 @@ import type { AlgorithmInput } from '../types/algorithm';
 type AlgorithmType = 'knapsack' | 'lcs';
 
 export function InputPanel() {
-  const { setInput, setSnapshots, reset } = useAlgorithmStore();
-  const [algorithmType, setAlgorithmType] = useState<AlgorithmType>('knapsack');
+  const { setInput, setSnapshots, setAlgorithmType, reset } = useAlgorithmStore();
+  const [algorithmType, setAlgorithmType_] = useState<AlgorithmType>('knapsack');
 
   // 背包问题输入
   const [weights, setWeights] = useState('2,3,4,5');
@@ -23,6 +23,9 @@ export function InputPanel() {
   const handleRun = () => {
     let input: AlgorithmInput;
     let snapshots;
+
+    // 先设置算法类型到 store（显式存储，避免后续通过输入推断）
+    setAlgorithmType(algorithmType);
 
     if (algorithmType === 'knapsack') {
       // 输入验证
@@ -81,7 +84,7 @@ export function InputPanel() {
         </label>
         <div className="flex gap-2">
           <button
-            onClick={() => setAlgorithmType('knapsack')}
+            onClick={() => setAlgorithmType_('knapsack')}
             className={`flex-1 py-2 px-4 rounded-md font-medium transition-colors ${
               algorithmType === 'knapsack'
                 ? 'bg-sky-600 text-white'
@@ -91,7 +94,7 @@ export function InputPanel() {
             0-1背包问题
           </button>
           <button
-            onClick={() => setAlgorithmType('lcs')}
+            onClick={() => setAlgorithmType_('lcs')}
             className={`flex-1 py-2 px-4 rounded-md font-medium transition-colors ${
               algorithmType === 'lcs'
                 ? 'bg-sky-600 text-white'

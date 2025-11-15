@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactElement } from 'react';
 import { motion } from 'framer-motion';
 
 interface CodeViewerProps {
@@ -76,7 +76,7 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
     const javaKeywords = ['public', 'private', 'static', 'class', 'if', 'else', 'for', 'while', 'return', 'int', 'String', 'void', 'new', 'Math'];
     const keywords = language === 'python' ? pythonKeywords : javaKeywords;
 
-    const parts: JSX.Element[] = [];
+    const parts: ReactElement[] = [];
     let lastIndex = 0;
 
     // 字符串匹配

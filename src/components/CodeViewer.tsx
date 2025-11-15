@@ -1,5 +1,8 @@
-import { useEffect, useRef, useState, type ReactElement } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-python';
+import 'prismjs/components/prism-java';
 
 interface CodeViewerProps {
   pythonCode: string[];
@@ -39,106 +42,20 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
     }
   }, [currentLine]);
 
-  // 增强的语法高亮函数
-  const highlightCode = (line: string) => {
-    const trimmed = line.trim();
-
-    // 空行
-    if (trimmed === '') {
-      return <span className="text-gray-300">{line || '　'}</span>;
+  // 使用 Prism.js 进行语法高亮
+  const highlightCode = (line: string): { __html: string } => {
+    if (!line.trim()) {
+      return { __html: '<span class="text-gray-300">　</span>' };
     }
 
-    // Python 注释 (#) 或 Java 注释 (//)
-    if (trimmed.startsWith('#') || trimmed.startsWith('//')) {
-      return <span className="text-gray-500 italic">{line}</span>;
+    try {
+      const grammar = language === 'python' ? Prism.languages.python : Prism.languages.java;
+      const highlighted = Prism.highlight(line, grammar, language);
+      return { __html: highlighted };
+    } catch (error) {
+      // 如果高亮失败，返回原始文本
+      return { __html: `<span class="text-gray-300">${line}</span>` };
     }
-
-    // 文档字符串
-    if (trimmed.startsWith('"""') || trimmed.startsWith('/**') || trimmed.startsWith('*')) {
-      return <span className="text-gray-500 italic">{line}</span>;
-    }
-
-    // 函数/方法定义
-    if (language === 'python' && trimmed.startsWith('def ')) {
-      return <span className="text-cyan-400 font-semibold">{line}</span>;
-    }
-    if (language === 'java' && (trimmed.includes('public ') || trimmed.includes('private ') || trimmed.includes('static '))) {
-      return <span className="text-cyan-400 font-semibold">{line}</span>;
-    }
-
-    // 类定义
-    if (trimmed.startsWith('class ') || trimmed.startsWith('public class ')) {
-      return <span className="text-yellow-400 font-bold">{line}</span>;
-    }
-
-    // 关键字和符号高亮
-    const pythonKeywords = ['def', 'class', 'if', 'else', 'elif', 'for', 'while', 'return', 'in', 'range', 'len', 'max', 'min', 'append', 'reversed', 'join'];
-    const javaKeywords = ['public', 'private', 'static', 'class', 'if', 'else', 'for', 'while', 'return', 'int', 'String', 'void', 'new', 'Math'];
-    const keywords = language === 'python' ? pythonKeywords : javaKeywords;
-
-    const parts: ReactElement[] = [];
-    let lastIndex = 0;
-
-    // 字符串匹配
-    const stringRegex = language === 'python'
-      ? /(['"])(?:(?=(\\?))\2.)*?\1|f(['"])(?:(?=(\\?))\4.)*?\3/g
-      : /(["'])(?:(?=(\\?))\2.)*?\1/g;
-    const strings: { start: number; end: number; text: string }[] = [];
-    let match: RegExpExecArray | null;
-
-    while ((match = stringRegex.exec(line)) !== null) {
-      strings.push({ start: match.index, end: match.index + match[0].length, text: match[0] });
-    }
-
-    // 数字匹配
-    const numberRegex = /\b\d+\b/g;
-    const numbers: { start: number; end: number; text: string }[] = [];
-    while ((match = numberRegex.exec(line)) !== null) {
-      const inString = strings.some(s => match!.index >= s.start && match!.index < s.end);
-      if (!inString) {
-        numbers.push({ start: match.index, end: match.index + match[0].length, text: match[0] });
-      }
-    }
-
-    // 关键字匹配
-    const keywordMatches: { start: number; end: number; text: string }[] = [];
-    keywords.forEach(keyword => {
-      const regex = new RegExp(`\\b${keyword}\\b`, 'g');
-      while ((match = regex.exec(line)) !== null) {
-        const inString = strings.some(s => match!.index >= s.start && match!.index < s.end);
-        if (!inString) {
-          keywordMatches.push({ start: match.index, end: match.index + match[0].length, text: match[0] });
-        }
-      }
-    });
-
-    // 合并所有匹配
-    const allMatches = [...strings, ...numbers, ...keywordMatches].sort((a, b) => a.start - b.start);
-
-    // 构建高亮 JSX
-    allMatches.forEach((m, i) => {
-      if (m.start > lastIndex) {
-        parts.push(<span key={`text-${i}`} className="text-gray-300">{line.slice(lastIndex, m.start)}</span>);
-      }
-
-      let className = 'text-gray-300';
-      if (strings.includes(m)) {
-        className = 'text-green-400';
-      } else if (numbers.includes(m)) {
-        className = 'text-orange-400';
-      } else if (keywordMatches.includes(m)) {
-        className = 'text-purple-400';
-      }
-
-      parts.push(<span key={`highlight-${i}`} className={className}>{m.text}</span>);
-      lastIndex = m.end;
-    });
-
-    if (lastIndex < line.length) {
-      parts.push(<span key="text-end" className="text-gray-300">{line.slice(lastIndex)}</span>);
-    }
-
-    return parts.length > 0 ? <>{parts}</> : <span className="text-gray-300">{line}</span>;
   };
 
   return (
@@ -173,7 +90,7 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
 
       <div
         ref={containerRef}
-        className="relative bg-gray-900 rounded-xl overflow-auto shadow-lg"
+        className="relative bg-gray-900 rounded-xl overflow-auto shadow-lg code-viewer"
         style={{ height: '500px' }}
       >
         <div className="p-8">
@@ -210,10 +127,11 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
                   {lineNumber}
                 </div>
 
-                {/* 代码内容（带高亮） */}
-                <div className="flex-1 font-mono text-[16px] leading-loose whitespace-pre">
-                  {line ? highlightCode(line) : <span className="text-gray-500">　</span>}
-                </div>
+                {/* 代码内容（使用 Prism.js 高亮） */}
+                <div
+                  className="flex-1 font-mono text-[16px] leading-loose whitespace-pre"
+                  dangerouslySetInnerHTML={highlightCode(line)}
+                />
               </div>
             );
           })}

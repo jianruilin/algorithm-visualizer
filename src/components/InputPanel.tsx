@@ -25,16 +25,42 @@ export function InputPanel() {
     let snapshots;
 
     if (algorithmType === 'knapsack') {
+      // 输入验证
+      const weightArray = weights.split(',').map((w) => parseInt(w.trim())).filter(n => !isNaN(n));
+      const valueArray = values.split(',').map((v) => parseInt(v.trim())).filter(n => !isNaN(n));
+      const capacityNum = parseInt(capacity);
+
+      if (weightArray.length === 0 || valueArray.length === 0) {
+        alert('请输入有效的数字！');
+        return;
+      }
+
+      if (weightArray.length !== valueArray.length) {
+        alert('物品重量和价值的数量必须相同！');
+        return;
+      }
+
+      if (isNaN(capacityNum) || capacityNum <= 0) {
+        alert('请输入有效的背包容量（大于0的整数）！');
+        return;
+      }
+
       input = {
-        weights: weights.split(',').map((w) => parseInt(w.trim())),
-        values: values.split(',').map((v) => parseInt(v.trim())),
-        capacity: parseInt(capacity),
+        weights: weightArray,
+        values: valueArray,
+        capacity: capacityNum,
       };
       snapshots = knapsackAlgorithm(input);
     } else {
+      // LCS 输入验证
+      if (!str1.trim() || !str2.trim()) {
+        alert('请输入两个非空字符串！');
+        return;
+      }
+
       input = {
-        str1,
-        str2,
+        str1: str1.trim(),
+        str2: str2.trim(),
       };
       snapshots = lcsAlgorithm(input);
     }

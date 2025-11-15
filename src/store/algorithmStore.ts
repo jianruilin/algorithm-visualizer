@@ -2,6 +2,9 @@ import { create } from 'zustand';
 import type { AlgorithmState, AlgorithmSnapshot, AlgorithmMetadata, AlgorithmInput } from '../types/algorithm';
 
 interface AlgorithmStore extends AlgorithmState {
+  // 内部状态：定时器 ID（浏览器环境中为 number）
+  playIntervalId: number | null;
+
   // 操作方法
   setAlgorithm: (algorithm: AlgorithmMetadata) => void;
   setInput: (input: AlgorithmInput) => void;
@@ -32,6 +35,7 @@ export const useAlgorithmStore = create<AlgorithmStore>((set, get) => ({
   currentSnapshotIndex: 0,
   status: 'idle',
   speed: 1000, // 默认1秒/帧
+  playIntervalId: null, // 定时器 ID
 
   // 设置方法
   setAlgorithm: (algorithm) => set({ algorithm, status: 'idle' }),
@@ -47,33 +51,55 @@ export const useAlgorithmStore = create<AlgorithmStore>((set, get) => ({
     const state = get();
     if (state.snapshots.length === 0) return;
 
+    // 清理旧的定时器（防止内存泄漏）
+    if (state.playIntervalId) {
+      clearInterval(state.playIntervalId);
+    }
+
     set({ status: 'running' });
 
     // 自动播放逻辑
-    const interval = setInterval(() => {
+    const intervalId = setInterval(() => {
       const currentState = get();
 
       if (currentState.status !== 'running') {
-        clearInterval(interval);
+        clearInterval(intervalId);
+        set({ playIntervalId: null });
         return;
       }
 
       if (currentState.currentSnapshotIndex >= currentState.snapshots.length - 1) {
-        clearInterval(interval);
-        set({ status: 'completed' });
+        clearInterval(intervalId);
+        set({ status: 'completed', playIntervalId: null });
         return;
       }
 
       currentState.nextSnapshot();
     }, state.speed);
+
+    set({ playIntervalId: intervalId });
   },
 
-  pause: () => set({ status: 'paused' }),
+  pause: () => {
+    const state = get();
+    if (state.playIntervalId) {
+      clearInterval(state.playIntervalId);
+      set({ playIntervalId: null });
+    }
+    set({ status: 'paused' });
+  },
 
-  reset: () => set({
-    currentSnapshotIndex: 0,
-    status: 'idle'
-  }),
+  reset: () => {
+    const state = get();
+    if (state.playIntervalId) {
+      clearInterval(state.playIntervalId);
+      set({ playIntervalId: null });
+    }
+    set({
+      currentSnapshotIndex: 0,
+      status: 'idle'
+    });
+  },
 
   // 时间旅行
   goToSnapshot: (index) => {

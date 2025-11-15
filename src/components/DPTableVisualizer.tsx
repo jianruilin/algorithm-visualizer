@@ -5,29 +5,29 @@ interface DPTableVisualizerProps {
   table: DPTable;
 }
 
+// 状态到颜色的映射（学术风格）- 提取到组件外部避免重复创建
+const getStatusColor = (status: string): string => {
+  switch (status) {
+    case 'current':
+      return 'bg-blue-100 border-blue-500 border-2';
+    case 'comparing':
+      return 'bg-yellow-50 border-yellow-400 border-2';
+    case 'selected':
+      return 'bg-green-50 border-green-400 border-2';
+    case 'optimal':
+      return 'bg-green-100 border-green-600 border-2 font-bold';
+    case 'path':
+      return 'bg-purple-100 border-purple-500 border-2';
+    default:
+      return 'bg-white border-gray-200 border';
+  }
+};
+
 export function DPTableVisualizer({ table }: DPTableVisualizerProps) {
   const { rows, cols, cells, rowLabels, colLabels } = table;
 
   // 根据表格大小动态计算单元格尺寸
   const cellSize = Math.max(40, Math.min(80, 600 / Math.max(rows, cols)));
-
-  // 状态到颜色的映射（学术风格）
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'current':
-        return 'bg-blue-100 border-blue-500 border-2';
-      case 'comparing':
-        return 'bg-yellow-50 border-yellow-400 border-2';
-      case 'selected':
-        return 'bg-green-50 border-green-400 border-2';
-      case 'optimal':
-        return 'bg-green-100 border-green-600 border-2 font-bold';
-      case 'path':
-        return 'bg-purple-100 border-purple-500 border-2';
-      default:
-        return 'bg-white border-gray-200 border';
-    }
-  };
 
   return (
     <div className="paper p-6 overflow-auto">

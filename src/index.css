@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "prismjs/themes/prism-tomorrow.css";
 
 /* 自定义主题变量 */
 @theme {
@@ -54,16 +53,16 @@
     @apply bg-white hover:bg-gray-50 text-gray-800 font-medium px-4 py-2 rounded-md border border-gray-200 transition-colors;
   }
 
-  /* Prism.js 自定义样式（适配深色代码查看器） */
+  /* Prism.js 自定义样式（亮色主题，适配浅色背景） */
   .code-viewer .token.comment,
   .code-viewer .token.prolog,
   .code-viewer .token.doctype,
   .code-viewer .token.cdata {
-    @apply text-gray-500;
+    @apply text-gray-500 italic;
   }
 
   .code-viewer .token.punctuation {
-    @apply text-gray-400;
+    @apply text-gray-600;
   }
 
   .code-viewer .token.property,
@@ -73,7 +72,7 @@
   .code-viewer .token.constant,
   .code-viewer .token.symbol,
   .code-viewer .token.deleted {
-    @apply text-orange-400;
+    @apply text-orange-600 font-medium;
   }
 
   .code-viewer .token.selector,
@@ -82,7 +81,7 @@
   .code-viewer .token.char,
   .code-viewer .token.builtin,
   .code-viewer .token.inserted {
-    @apply text-green-400;
+    @apply text-green-700 font-medium;
   }
 
   .code-viewer .token.operator,
@@ -90,23 +89,28 @@
   .code-viewer .token.url,
   .code-viewer .language-css .token.string,
   .code-viewer .style .token.string {
-    @apply text-cyan-400;
+    @apply text-cyan-700;
   }
 
   .code-viewer .token.atrule,
   .code-viewer .token.attr-value,
   .code-viewer .token.keyword {
-    @apply text-purple-400;
+    @apply text-purple-700 font-semibold;
   }
 
   .code-viewer .token.function,
   .code-viewer .token.class-name {
-    @apply text-yellow-400;
+    @apply text-blue-700 font-semibold;
   }
 
   .code-viewer .token.regex,
   .code-viewer .token.important,
   .code-viewer .token.variable {
-    @apply text-pink-400;
+    @apply text-pink-700 font-medium;
+  }
+
+  /* 默认文本颜色 */
+  .code-viewer code {
+    @apply text-gray-800;
   }
 }

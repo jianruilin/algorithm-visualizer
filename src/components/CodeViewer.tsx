@@ -45,7 +45,7 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
   // 使用 Prism.js 进行语法高亮
   const highlightCode = (line: string): { __html: string } => {
     if (!line.trim()) {
-      return { __html: '<span class="text-gray-300">　</span>' };
+      return { __html: '<span class="text-gray-400">　</span>' };
     }
 
     try {
@@ -54,7 +54,7 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
       return { __html: highlighted };
     } catch (error) {
       // 如果高亮失败，返回原始文本
-      return { __html: `<span class="text-gray-300">${line}</span>` };
+      return { __html: `<span class="text-gray-800">${line}</span>` };
     }
   };
 
@@ -90,7 +90,7 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
 
       <div
         ref={containerRef}
-        className="relative bg-gray-900 rounded-xl overflow-auto shadow-lg code-viewer"
+        className="relative bg-gray-50 border border-gray-200 rounded-xl overflow-auto shadow-lg code-viewer"
         style={{ height: '500px' }}
       >
         <div className="p-8">
@@ -105,13 +105,13 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
                   if (el) lineRefs.current.set(lineNumber, el);
                 }}
                 className={`relative flex items-start py-3 ${
-                  isCurrentLine ? 'bg-blue-900/40' : ''
+                  isCurrentLine ? 'bg-blue-100/70 rounded' : ''
                 }`}
               >
                 {/* 当前行指示器 */}
                 {isCurrentLine && (
                   <motion.div
-                    className="absolute left-0 top-0 bottom-0 w-1.5 bg-blue-400 rounded-r"
+                    className="absolute left-0 top-0 bottom-0 w-1.5 bg-blue-500 rounded-r"
                     initial={{ scaleY: 0 }}
                     animate={{ scaleY: 1 }}
                     transition={{ duration: 0.2 }}
@@ -121,7 +121,7 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
                 {/* 行号 */}
                 <div
                   className={`w-20 flex-shrink-0 text-right pr-6 select-none text-sm ${
-                    isCurrentLine ? 'text-blue-400 font-bold' : 'text-gray-600'
+                    isCurrentLine ? 'text-blue-700 font-bold' : 'text-gray-500'
                   }`}
                 >
                   {lineNumber}

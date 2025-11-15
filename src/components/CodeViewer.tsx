@@ -104,7 +104,7 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
                 ref={(el) => {
                   if (el) lineRefs.current.set(lineNumber, el);
                 }}
-                className={`relative flex items-start py-3 ${
+                className={`relative flex items-center py-2 ${
                   isCurrentLine ? 'bg-blue-100/70 rounded' : ''
                 }`}
               >
@@ -120,8 +120,8 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
 
                 {/* 行号 */}
                 <div
-                  className={`w-20 flex-shrink-0 text-right pr-6 select-none text-sm ${
-                    isCurrentLine ? 'text-blue-700 font-bold' : 'text-gray-500'
+                  className={`w-16 flex-shrink-0 text-right pr-4 select-none font-mono text-sm ${
+                    isCurrentLine ? 'text-blue-700 font-bold' : 'text-gray-400'
                   }`}
                 >
                   {lineNumber}
@@ -129,7 +129,7 @@ export function CodeViewer({ pythonCode, javaCode, currentLine }: CodeViewerProp
 
                 {/* 代码内容（使用 Prism.js 高亮） */}
                 <div
-                  className="flex-1 font-mono text-[16px] leading-loose whitespace-pre"
+                  className="flex-1 font-mono text-sm leading-relaxed whitespace-pre"
                   dangerouslySetInnerHTML={highlightCode(line)}
                 />
               </div>
